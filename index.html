@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Secure Portal</title>
+    <style>
+        :root {
+            --dark-bg: #121212;
+            --darker-bg: #0a0a0a;
+            --card-bg: #1e1e1e;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b0b0b0;
+            --accent: #ff6b35;
+            --accent-hover: #ff8c5a;
+            --error: #ff4444;
+            --success: #4CAF50;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .login-container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 420px;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--accent);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: var(--accent);
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .logo p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: var(--darker-bg);
+            border: 1px solid #333;
+            border-radius: var(--border-radius);
+            color: var(--text-primary);
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.2);
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .toggle-password:hover {
+            color: var(--accent);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .links a:hover {
+            color: var(--accent);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error .form-control {
+            border-color: var(--error);
+        }
+
+        .error .error-message {
+            display: block;
+        }
+
+        .success-message {
+            color: var(--success);
+            font-size: 14px;
+            margin-top: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <h1>SecurePortal</h1>
+            <p>Access your secure dashboard</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+                <div class="error-message">Please enter a valid email address</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-container">
+                    <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+                    <span class="toggle-password" id="togglePassword">👁️</span>
+                </div>
+                <div class="error-message">Password must be at least 6 characters</div>
+            </div>
+
+            <button type="submit" class="btn">Login</button>
+
+            <div class="success-message" id="successMessage">
+                Login successful! Redirecting...
+            </div>
+
+            <div class="links">
+                <a href="#">Forgot password?</a>
+                <a href="#">Create account</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const togglePassword = document.getElementById('togglePassword');
+            const successMessage = document.getElementById('successMessage');
+
+            // Toggle password visibility
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.textContent = type === 'password' ? '👁️' : '🔒';
+            });
+
+            // Form validation
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                let isValid = true;
+
+                // Validate email
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const emailGroup = emailInput.closest('.form-group');
+                if (!emailRegex.test(emailInput.value.trim())) {
+                    emailGroup.classList.add('error');
+                    isValid = false;
+                } else {
+                    emailGroup.classList.remove('error');
+                }
+
+                // Validate password
+                const passwordGroup = passwordInput.closest('.form-group');
+                if (passwordInput.value.length < 6) {
+                    passwordGroup.classList.add('error');
+                    isValid = false;
+                } else {
+                    passwordGroup.classList.remove('error');
+                }
+
+                // If valid, show success message (in a real app, you would send to server)
+                if (isValid) {
+                    successMessage.style.display = 'block';
+                    loginForm.reset();
+                    
+                    // Simulate redirect (in a real app, this would be an actual redirect)
+                    setTimeout(() => {
+                        console.log('Login successful!');
+                        // window.location.href = 'dashboard.html';
+                    }, 1500);
+                }
+            });
+
+            // Real-time validation for better UX
+            emailInput.addEventListener('input', function() {
+                const emailGroup = this.closest('.form-group');
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                
+                if (this.value.trim() === '' || emailRegex.test(this.value.trim())) {
+                    emailGroup.classList.remove('error');
+                }
+            });
+
+            passwordInput.addEventListener('input', function() {
+                const passwordGroup = this.closest('.form-group');
+                if (this.value.length >= 6 || this.value.length === 0) {
+                    passwordGroup.classList.remove('error');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
